@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<head>
+    <link rel="stylesheet" type="text/css" media="screen" href="/bootstrap/css/bootstrap.min.css"/>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-offset-4 col-sm-4">
+
+                <h:panelGroup styleClass="form-group">
+                    <div align="center">
+                        <h3><h:outputLabel value="Hello, ${authentication.email}!"/></h3>
+                    </div>
+                </h:panelGroup>
+
+                <h:form styleClass="btn-block center-block">
+                    <div align="center">
+                        <h:commandButton value="Show order details"
+                                         action="#{orderDetails.showOrderDetails}"
+                                         styleClass="btn btn-default btn-block"/>
+                        <h:commandButton value="Sign out"
+                                         action="#{authentication.logout}"
+                                         styleClass="btn btn-default btn-block"/>
+                    </div>
+                </h:form>
+
+                <h:form styleClass="form-horizontal">
+                    <h:panelGroup styleClass="form-group">
+                        <h:outputLabel styleClass="control-label"
+                                       value="Truck Number : "/>
+                        <h:outputText value="${orderDetails.truckNumber}"/>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="form-group">
+                        <h:outputLabel styleClass="control-label"
+                                       value="Order ID : "/>
+                        <h:outputText value="${orderDetails.orderId}"/>
+                    </h:panelGroup>
+                </h:form>
+
+                <h:form styleClass="btn-block center-block">
+                    <div align="center">
+                        <h:commandButton value="Change status"
+                                         action="#{orderDetails.changeStatus}"
+                                         styleClass="btn btn-default btn-block"/>
+                        <h:selectOneMenu value="#{orderDetails.status}"
+                                         styleClass="form-control center-block">
+                            <f:selectItem itemValue="FREE" itemLabel="[FREE] Ready to performing" />
+                            <f:selectItem itemValue="BUSY" itemLabel="[BUSY] Drive a truck" />
+                            <f:selectItem itemValue="REST" itemLabel="[REST] Rest after driving" />
+                            <f:selectItem itemValue="RELAX" itemLabel="[RELAX] Relax after performing" />
+                        </h:selectOneMenu>
+                    </div>
+                </h:form>
+
+                <div>
+                    <table class="table table-striped">
+                        <tr>
+                            <th>Co-Drivers Names</th>
+                            <th>Email</th>
+                        </tr>
+                        <c:forEach var="driver" items="#{orderDetails.drivers.entrySet}">
+                            <tr>
+                                <td>${driver.value}</td>
+                                <td>${driver.key}</td>
+                            </tr>
+                        </c:forEach>
+                    </table>
+                </div>
+
+                <table class="table table-striped">
+                    <tr>
+                        <th>Cargo ID</th>
+                        <th>Destination Point</th>
+                    </tr>
+                    <c:forEach var="cargo" items="#{orderDetails.cargoes.entrySet}">
+                        <tr>
+                            <td>${cargo.key}</td>
+                            <td>${cargo.value}</td>
+                            <td>
+                                <h:form>
+                                    <h:inputHidden value="${cargo.key}" />
+                                    <h:commandButton value="Complete ${cargo.key}"
+                                                     action="#{orderDetails.completeCargo}"
+                                                     styleClass="btn btn-primary"/>
+                                </h:form>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
